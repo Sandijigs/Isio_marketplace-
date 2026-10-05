@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+/*
+ * Isio design tokens: "Market day".
+ * Bold, colour-blocked, Lagos-print energy, kept calm enough for a real shop.
+ * Full rules: src/app/CLAUDE.md → Design system.
+ */
+@theme {
+  --color-ink: #161616; /* text, borders, primary buttons */
+  --color-paper: #ffffff; /* page and card background */
+
+  --color-coral: #e5533a; /* hero panel, numerals, logo */
+  --color-coral-deep: #cc4229;
+  --color-raffia: #f1bf42; /* highlights, commission tags, seller CTA on dark */
+  --color-raffia-deep: #dca52c;
+  --color-indigo: #2b3990; /* AI and system surfaces (draft header, brief header), focus ring */
+  --color-indigo-soft: #4655ae;
+
+  --color-coral-tint: #fbe4dd; /* section backgrounds */
+  --color-raffia-tint: #fcf2d6;
+  --color-indigo-tint: #e4e7f6;
+
+  --color-chat: #f4f4f1; /* assistant bubbles */
+  --color-line: #e3e3de; /* light dividers (nav bar) */
+  --color-line-strong: #c9c9c3; /* light borders (shortcut pills) */
+  --color-on-ink-muted: #cfcfcf; /* secondary text on ink */
+  --color-on-ink-line: #5a5a5a; /* dividers on ink */
+
+  --shadow-hard: 6px 6px 0 #161616;
+  --shadow-hard-indigo: 6px 6px 0 #2b3990;
+}
+
+@theme inline {
+  --font-sans: var(--font-bricolage), 'Arial Narrow', system-ui, sans-serif;
+}
+
+/* Bricolage Grotesque has a width axis: stretch-75 is the condensed display cut. */
+@utility stretch-* {
+  font-stretch: calc(--value(integer) * 1%);
+}
+
+/* Sideways-scrolling rows (header pills, filters) without a visible scrollbar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+html {
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-indigo);
+  outline-offset: 3px;
+}
+
+.on-ink :focus-visible {
+  outline-color: var(--color-raffia);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

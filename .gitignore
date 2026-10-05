@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local embedded database (PGlite)
+.data/
+
+# Environment: real values never leave your machine
+.env
+.env.local
+.env.*.local
+.env*
+!.env.example
+
+# Testing
+coverage/
+
+# Deployment
+.vercel/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Logs and keys
+*.log
+*.pem
+
+# Private working files (assistant instructions and settings, the internal build plan)
+CLAUDE.md
+**/CLAUDE.md
+CLAUDE.local.md
+.claude/
+plans/
+
+# Foreign lockfiles (this project uses pnpm)
+package-lock.json
+yarn.lock
+
+# Local image uploads (dev/demo image store)
+public/uploads/
