@@ -40,14 +40,30 @@ PayPal can only send webhooks to a public URL, so set these up on your deploymen
 3. Events: `PAYMENT.CAPTURE.COMPLETED`, `PAYMENT.CAPTURE.DENIED`, `PAYMENT.CAPTURE.REFUNDED`.
 4. Copy the **Webhook ID** into your deployment's environment as `PAYPAL_WEBHOOK_ID`. Isio uses it to verify every webhook with PayPal before acting on it.
 
-## 5. What we verified in the sandbox
+## 5. Run the spike
 
-Filled in from `scripts/paypal-spike.ts` results.
+`scripts/paypal-spike.ts` checks the assumptions below against the real sandbox: one 1.00 USD order paid directly to a creative's account, approved by the buyer, captured, then a tracking number added. It prints ids, statuses and the payee; never tokens or secrets.
+
+1. Add to `.env.local` the email of a sandbox **Business** account that is not the one your app belongs to (in **Sandbox Accounts**, create one if needed):
+
+   ```
+   SPIKE_PAYEE_EMAIL="creative-test@business.example.com"
+   ```
+
+2. Run `pnpm paypal:spike`. It creates the order and prints the approval link.
+3. Open the link, log in as the sandbox **Personal** account and approve. The redirect to `localhost` may not load; that is expected. Back in the terminal, press Enter.
+4. The script captures the order and tries to add tracking, then prints the results.
+5. Log in to [sandbox.paypal.com](https://www.sandbox.paypal.com) as the payee account and check the 1.00 USD arrived there, not in the app owner's account.
+6. For the Nigerian question, create a sandbox Business account with country **Nigeria**, set `SPIKE_PAYEE_EMAIL` to it and run again.
+
+## 6. What we verified in the sandbox
+
+Filled in from `scripts/paypal-spike.ts` runs. Webhooks are verified separately on a deployed preview, where PayPal can reach the app.
 
 | Question | Result | Date |
 |---|---|---|
 | Payee-direct order (money lands in the creative's sandbox account) | not yet verified | |
-| Approval link type returned (`payer-action` / `approve`) | not yet verified | |
+| Approval link type returned (`payer-action` / `approve`) | `payer-action`. With `payment_source.paypal.experience_context` set, create returns status `PAYER_ACTION_REQUIRED` and links `self` and `payer-action` only. No `approve` link. | 2026-10-05 |
 | Nigerian sandbox business account as payee | not yet verified | |
 | Webhooks delivered for payee-direct captures | not yet verified | |
 | Add tracking on payee-direct orders | not yet verified | |

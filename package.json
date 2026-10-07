@@ -18,7 +18,8 @@
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "paypal:spike": "tsx --env-file=.env.local scripts/paypal-spike.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.71",
