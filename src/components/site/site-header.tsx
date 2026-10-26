@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import { buttonClasses } from '@/components/ui/button-link';
+import { getSession } from '@/services/catalog/session';
+
 import { IsioLogo } from './isio-mark';
 
 // Landing-page shortcuts for now; point them at /explore filters once browse (F5) exists.
@@ -15,23 +18,40 @@ const SHORTCUTS = [
 ];
 
 /** The nav bar (logo, sign in, start selling) with the shortcut pills in a row below it. */
-export function SiteHeader() {
+export async function SiteHeader() {
+  const user = await getSession();
+
   return (
     <>
       <header className="border-b border-line bg-paper">
         <div className="mx-auto flex min-h-[72px] max-w-[1360px] items-center justify-between gap-4 px-[clamp(16px,4vw,40px)]">
           <IsioLogo />
-          <div className="flex shrink-0 items-center gap-[clamp(14px,2vw,24px)]">
-            <Link href="/signin" className="py-3 text-base font-semibold text-ink no-underline hover:underline">
-              Sign in
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex min-h-[46px] items-center rounded-full bg-ink px-5 text-base font-bold whitespace-nowrap text-paper no-underline hover:bg-indigo"
-            >
-              Start selling
-            </Link>
-          </div>
+          {user ? (
+            <div className="flex min-w-0 items-center gap-[clamp(10px,2vw,20px)]">
+              <p className="min-w-0 truncate text-base font-semibold">
+                <span className="hidden sm:inline">Signed in as </span>
+                <span className="font-bold">{user.name}</span>
+              </p>
+              {/* A plain form post, so signing out works even before JavaScript loads. */}
+              <form action="/api/auth/signout" method="post" className="shrink-0">
+                <button type="submit" className={buttonClasses('outline', 'sm')}>
+                  Sign out
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="flex shrink-0 items-center gap-[clamp(14px,2vw,24px)]">
+              <Link href="/signin" className="py-3 text-base font-semibold text-ink no-underline hover:underline">
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="inline-flex min-h-[46px] items-center rounded-full bg-ink px-5 text-base font-bold whitespace-nowrap text-paper no-underline hover:bg-indigo"
+              >
+                Start selling
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 

@@ -43,6 +43,31 @@ export interface CreativeProfile {
   createdAt: string;
 }
 
+// ── Accounts ──────────────────────────────────────────────────────────────────
+
+/** POST /api/auth/signup and /api/auth/signin respond with the signed-in user. */
+export interface AuthResponse {
+  user: User;
+}
+
+/** GET /api/auth/me. `creativeProfile` is null for buyers and for creatives before onboarding. */
+export interface MeResponse {
+  user: User;
+  creativeProfile: CreativeProfile | null;
+}
+
+/**
+ * A shared account for trying Isio, listed on the sign-in page whenever Isio
+ * is not taking live payments. Fictional people only.
+ */
+export interface DemoAccount {
+  email: string;
+  password: string;
+  name: string;
+  role: UserRole;
+  description: string; // e.g. "Buyer in Toronto"
+}
+
 // ── Catalog ───────────────────────────────────────────────────────────────────
 
 /** A PRODUCT ships a finished piece. A SERVICE is made to order (commission). */

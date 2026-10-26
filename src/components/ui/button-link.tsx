@@ -8,11 +8,18 @@ const VARIANTS = {
 } as const;
 
 const SIZES = {
+  sm: 'min-h-[46px] px-5 text-base',
   md: 'min-h-[50px] px-6 text-[17px]',
   lg: 'min-h-[56px] px-[30px] text-lg',
 } as const;
 
 export type ButtonVariant = keyof typeof VARIANTS;
+export type ButtonSize = keyof typeof SIZES;
+
+/** The pill styles, for real <button>s (forms) that must match ButtonLink. */
+export function buttonClasses(variant: ButtonVariant = 'ink', size: ButtonSize = 'md'): string {
+  return `inline-flex items-center justify-center rounded-full font-bold whitespace-nowrap no-underline transition-colors disabled:cursor-wait disabled:opacity-70 ${VARIANTS[variant]} ${SIZES[size]}`;
+}
 
 /** Isio's pill button, as a link. Never use it to imitate the PayPal button. */
 export function ButtonLink({
@@ -24,7 +31,7 @@ export function ButtonLink({
 }: Readonly<{
   href: string;
   variant?: ButtonVariant;
-  size?: keyof typeof SIZES;
+  size?: ButtonSize;
   className?: string;
   children: React.ReactNode;
 }>) {
