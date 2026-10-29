@@ -68,6 +68,33 @@ export interface DemoAccount {
   description: string; // e.g. "Buyer in Toronto"
 }
 
+/**
+ * What anyone may see about a creative. Never includes `paypalEmail`: that is
+ * for the creative and for Commerce's server-side checkout only.
+ */
+export interface PublicCreativeProfile {
+  handle: string;
+  displayName: string;
+  craft: string;
+  story: string | null;
+  location: string | null;
+  country: string;
+  avatarUrl: string | null;
+  /** A fictional demo maker, labelled as such on the storefront. */
+  isDemo: boolean;
+  createdAt: string;
+}
+
+/** GET /api/creatives/[handle]. Listings join this in F4. */
+export interface StorefrontResponse {
+  creative: PublicCreativeProfile;
+}
+
+/** PUT /api/creatives/me. The owner's own view, so `paypalEmail` is included. */
+export interface MyProfileResponse {
+  creativeProfile: CreativeProfile;
+}
+
 // ── Catalog ───────────────────────────────────────────────────────────────────
 
 /** A PRODUCT ships a finished piece. A SERVICE is made to order (commission). */

@@ -38,7 +38,8 @@ export function SignUpForm({ initialRole, nextPath }: Readonly<{ initialRole: Us
       setPending(false);
       return;
     }
-    router.replace(nextPath);
+    // New makers go straight to setting up their stall.
+    router.replace(nextPath === '/' && result.data.user.role === 'CREATIVE' ? '/studio' : nextPath);
     router.refresh();
   }
 

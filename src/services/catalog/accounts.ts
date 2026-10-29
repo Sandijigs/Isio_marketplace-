@@ -2,31 +2,15 @@ import { eq } from 'drizzle-orm';
 
 import { getDb, schema } from '@/db/client';
 import { ApiError } from '@/lib/api';
-import type { CreativeProfile, User } from '@/types/shared';
+import type { User } from '@/types/shared';
 
 import type { SignInInput, SignUpInput } from './auth-input';
 import { hashPassword, verifyPassword } from './password';
 
 type UserRow = typeof schema.users.$inferSelect;
-type CreativeProfileRow = typeof schema.creativeProfiles.$inferSelect;
 
 function toUser(row: UserRow): User {
   return { id: row.id, email: row.email, name: row.name, role: row.role, createdAt: row.createdAt.toISOString() };
-}
-
-function toCreativeProfile(row: CreativeProfileRow): CreativeProfile {
-  return {
-    userId: row.userId,
-    handle: row.handle,
-    displayName: row.displayName,
-    craft: row.craft,
-    story: row.story,
-    location: row.location,
-    country: row.country,
-    avatarUrl: row.avatarUrl,
-    paypalEmail: row.paypalEmail,
-    createdAt: row.createdAt.toISOString(),
-  };
 }
 
 /** Create an account. Emails arrive lowercased from `signUpInput`. */
@@ -52,13 +36,4 @@ export async function authenticate(input: SignInInput): Promise<User | null> {
 export async function getUserById(id: string): Promise<User | null> {
   const [row] = await getDb().select().from(schema.users).where(eq(schema.users.id, id)).limit(1);
   return row ? toUser(row) : null;
-}
-
-export async function getCreativeProfile(userId: string): Promise<CreativeProfile | null> {
-  const [row] = await getDb()
-    .select()
-    .from(schema.creativeProfiles)
-    .where(eq(schema.creativeProfiles.userId, userId))
-    .limit(1);
-  return row ? toCreativeProfile(row) : null;
 }

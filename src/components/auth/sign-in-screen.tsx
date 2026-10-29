@@ -30,7 +30,8 @@ export function SignInScreen({
       setPending(null);
       return;
     }
-    router.replace(nextPath);
+    // Makers start in their studio unless they were heading somewhere specific.
+    router.replace(nextPath === '/' && result.data.user.role === 'CREATIVE' ? '/studio' : nextPath);
     router.refresh();
   }
 

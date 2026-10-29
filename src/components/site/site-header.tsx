@@ -30,7 +30,15 @@ export async function SiteHeader() {
             <div className="flex min-w-0 items-center gap-[clamp(10px,2vw,20px)]">
               <p className="min-w-0 truncate text-base font-semibold">
                 <span className="hidden sm:inline">Signed in as </span>
-                <span className="font-bold">{user.name}</span>
+                {user.role === 'CREATIVE' ? (
+                  // Makers reach their studio from their name; the sign-in flow also lands them there.
+                  <Link href="/studio" className="font-bold text-ink underline decoration-2 underline-offset-4 hover:text-indigo">
+                    {user.name}
+                    <span className="sr-only">, your studio</span>
+                  </Link>
+                ) : (
+                  <span className="font-bold">{user.name}</span>
+                )}
               </p>
               {/* A plain form post, so signing out works even before JavaScript loads. */}
               <form action="/api/auth/signout" method="post" className="shrink-0">
