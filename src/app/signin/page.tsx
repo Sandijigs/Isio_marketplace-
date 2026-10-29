@@ -6,7 +6,8 @@ import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
 import { modes } from '@/lib/env';
 import { safeNextPath } from '@/lib/safe-redirect';
-import { DEMO_ACCOUNTS, demoAccountsEnabled, ensureDemoAccounts } from '@/services/catalog/demo-accounts';
+import { DEMO_ACCOUNTS, demoAccountsEnabled } from '@/services/catalog/demo-accounts';
+import { ensureDemoData } from '@/services/catalog/demo-seed';
 import { getSession } from '@/services/catalog/session';
 
 export const metadata: Metadata = { title: 'Sign in · Isio' };
@@ -16,7 +17,7 @@ export default async function SignInPage({ searchParams }: Readonly<{ searchPara
   if (await getSession()) redirect(nextPath);
 
   const showDemo = demoAccountsEnabled();
-  if (showDemo) await ensureDemoAccounts();
+  if (showDemo) await ensureDemoData();
 
   return (
     <>

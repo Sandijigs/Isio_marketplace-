@@ -1,6 +1,6 @@
 import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import type { StructuredBrief } from '@/types/shared';
+import type { ListingImage, StructuredBrief } from '@/types/shared';
 import { LISTING_CATEGORIES } from '@/types/shared';
 
 const id = () =>
@@ -71,13 +71,14 @@ export const listings = pgTable('listings', {
   title: text('title').notNull(),
   description: text('description').notNull(),
   story: text('story'),
-  category: listingCategory('category').notNull(),
+  // Nullable so a draft can be saved before the creative picks one; publishing requires it.
+  category: listingCategory('category'),
   priceCents: integer('price_cents').notNull(),
   currency: text('currency').notNull().default('USD'),
   shippingCents: integer('shipping_cents').notNull().default(0),
   stock: integer('stock'),
   turnaroundDays: integer('turnaround_days'),
-  images: jsonb('images').$type<string[]>().notNull().default([]),
+  images: jsonb('images').$type<ListingImage[]>().notNull().default([]),
   tags: jsonb('tags').$type<string[]>().notNull().default([]),
   aiDrafted: boolean('ai_drafted').notNull().default(false),
   createdAt: createdAt(),

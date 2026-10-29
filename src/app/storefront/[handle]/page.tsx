@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { ListingCard } from '@/components/listings/listing-card';
 import { ButtonLink } from '@/components/ui/button-link';
 import { getCreativeProfile } from '@/services/catalog/creatives';
+import { listStorefrontListings } from '@/services/catalog/listings';
 import { getSession } from '@/services/catalog/session';
 
 import { loadCreative } from './load-creative';
@@ -27,7 +29,7 @@ export default async function StorefrontPage({ params }: Props) {
   const creative = await loadCreative((await params).handle);
   if (!creative) notFound();
 
-  const viewer = await getSession();
+  const [viewer, listings] = await Promise.all([getSession(), listStorefrontListings(creative.handle)]);
   const isOwner = viewer?.role === 'CREATIVE' && (await getCreativeProfile(viewer.id))?.handle === creative.handle;
   const initial = creative.displayName.trim().charAt(0).toUpperCase() || '?';
 
@@ -41,7 +43,7 @@ export default async function StorefrontPage({ params }: Props) {
         ) : null}
 
         <div className="flex flex-wrap items-end gap-x-6 gap-y-5">
-          {/* Avatar uploads arrive with images (F4); until then every maker gets their initial. */}
+          {/* No avatar uploads in v1: every maker gets their initial. */}
           <div
             aria-hidden="true"
             className="stretch-75 flex size-[clamp(96px,14vw,148px)] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-coral text-[clamp(52px,8vw,84px)] leading-none font-extrabold text-ink"
@@ -65,9 +67,12 @@ export default async function StorefrontPage({ params }: Props) {
         </div>
 
         {isOwner ? (
-          <ButtonLink href="/studio" variant="outline">
-            Edit your profile
-          </ButtonLink>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href="/studio">Go to your studio</ButtonLink>
+            <ButtonLink href="/studio/profile" variant="outline">
+              Edit your profile
+            </ButtonLink>
+          </div>
         ) : null}
       </section>
 
@@ -84,14 +89,29 @@ export default async function StorefrontPage({ params }: Props) {
         <h2 id="pieces-heading" className="stretch-80 text-[clamp(28px,3vw,40px)] leading-none font-extrabold">
           Pieces
         </h2>
-        <div className="flex flex-col items-start gap-3 border-2 border-ink bg-raffia-tint p-[clamp(20px,3vw,36px)]">
-          <p className="stretch-80 text-[clamp(24px,2.6vw,32px)] leading-none font-extrabold">No pieces yet.</p>
-          <p className="max-w-[36em] text-lg font-medium">
-            {isOwner
-              ? 'Your pieces will show here once you list them.'
-              : `${creative.displayName} hasn’t listed anything yet. Check back soon.`}
-          </p>
-        </div>
+        {listings.length > 0 ? (
+          <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(300px,46%),1fr))] gap-[clamp(12px,2vw,28px)]">
+            {listings.map((listing) => (
+              <li key={listing.id}>
+                <ListingCard listing={listing} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex flex-col items-start gap-3 border-2 border-ink bg-raffia-tint p-[clamp(20px,3vw,36px)]">
+            <p className="stretch-80 text-[clamp(24px,2.6vw,32px)] leading-none font-extrabold">No pieces yet.</p>
+            <p className="max-w-[36em] text-lg font-medium">
+              {isOwner
+                ? 'Your pieces will show here once you publish them.'
+                : `${creative.displayName} hasn’t listed anything yet. Check back soon.`}
+            </p>
+            {isOwner ? (
+              <ButtonLink href="/studio/new" size="lg">
+                List a piece
+              </ButtonLink>
+            ) : null}
+          </div>
+        )}
       </section>
     </div>
   );

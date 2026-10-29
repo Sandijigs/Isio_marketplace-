@@ -22,6 +22,8 @@ const envSchema = z.object({
 
   DATABASE_URL: optionalString,
   PGLITE_DIR: z.string().default('./.data/isio'),
+  /** Local image store. Next only serves public/ files present at boot, so uploads live here and /uploads/[file] serves them. */
+  UPLOADS_DIR: z.string().default('./.data/uploads'),
 
   PAYMENTS_MODE: z.enum(['mock', 'paypal']).optional(),
   PAYPAL_ENV: z.enum(['sandbox', 'live']).default('sandbox'),

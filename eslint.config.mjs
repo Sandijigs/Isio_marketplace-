@@ -15,7 +15,7 @@ export default defineConfig([
   },
   {
     // CLI scripts print to the terminal by design.
-    files: ["src/db/migrate.ts", "scripts/**"],
+    files: ["src/db/migrate.ts", "src/db/seed.ts", "scripts/**"],
     rules: { "no-console": "off" },
   },
 ]);

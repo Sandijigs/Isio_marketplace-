@@ -54,6 +54,8 @@ pnpm db:migrate   # creates the embedded database in ./.data
 pnpm dev          # http://localhost:3000
 ```
 
+The dev server fills in the demo catalog on first start: five fictional makers and a dozen listings. Sign in with one of the demo accounts listed on the sign-in page.
+
 That's all. With no configuration Isio runs in **demo mode**: an embedded Postgres database, simulated PayPal payments and simulated AI drafts, clearly labelled on screen. Check what's live at [localhost:3000/api/health](http://localhost:3000/api/health).
 
 ### Use the real PayPal sandbox and live AI
@@ -76,6 +78,7 @@ Restart `pnpm dev`. Each integration switches on as soon as its keys are present
 | `pnpm typecheck` / `pnpm lint` | Type and lint checks |
 | `pnpm db:generate` | Create a migration after changing `src/db/schema.ts` |
 | `pnpm db:migrate` | Apply migrations (embedded DB or `DATABASE_URL`) |
+| `pnpm db:seed` | Add the demo catalog (safe to rerun; stop `pnpm dev` first, the embedded DB allows one process) |
 
 ## Tech
 

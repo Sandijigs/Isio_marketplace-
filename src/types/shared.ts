@@ -85,9 +85,10 @@ export interface PublicCreativeProfile {
   createdAt: string;
 }
 
-/** GET /api/creatives/[handle]. Listings join this in F4. */
+/** GET /api/creatives/[handle]. `listings` holds only the creative's ACTIVE listings, newest first. */
 export interface StorefrontResponse {
   creative: PublicCreativeProfile;
+  listings: Listing[];
 }
 
 /** PUT /api/creatives/me. The owner's own view, so `paypalEmail` is included. */
@@ -119,6 +120,12 @@ export const LISTING_CATEGORIES = [
 
 export type ListingCategory = (typeof LISTING_CATEGORIES)[number];
 
+/** A listing photo. The first one in a listing is its cover. */
+export interface ListingImage {
+  url: string; // what the browser loads: /uploads/... from the local store, a full URL from a cloud store
+  alt: string; // written by the creative; empty means "use the title"
+}
+
 export interface Listing {
   id: string;
   creativeId: string;
@@ -129,15 +136,33 @@ export interface Listing {
   title: string;
   description: string;
   story: string | null; // the piece's story, in the creative's voice
-  category: ListingCategory;
-  price: Money; // for SERVICE: the starting price ("from $X")
+  category: ListingCategory | null; // null only while a draft
+  price: Money; // for SERVICE: the starting price ("from $X"). 0 only while a draft
   shipping: Money;
   stock: number | null; // PRODUCT only; null = made to order
   turnaroundDays: number | null; // SERVICE only
-  images: string[]; // absolute URLs
+  images: ListingImage[]; // 0–8; at least 1 once published
   tags: string[];
   aiDrafted: boolean; // true if the creative started from an AI draft
   createdAt: string;
+  updatedAt: string;
+}
+
+/** POST /api/listings, GET and PATCH /api/listings/[id]. */
+export interface ListingResponse {
+  listing: Listing;
+}
+
+/** One stored photo from POST /api/uploads, already resized. */
+export interface UploadedImage {
+  url: string;
+  width: number;
+  height: number;
+}
+
+/** POST /api/uploads. Images come back in the order they were sent. */
+export interface UploadResponse {
+  images: UploadedImage[];
 }
 
 // ── Commerce ──────────────────────────────────────────────────────────────────

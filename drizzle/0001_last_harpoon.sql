@@ -1,0 +1,1 @@
+ALTER TABLE "listings" ALTER COLUMN "category" DROP NOT NULL;
